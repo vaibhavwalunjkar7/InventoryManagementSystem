@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ const Register = () => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        password: ""
+        password: "",
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +22,7 @@ const Register = () => {
 
         setFormData((previousData) => ({
             ...previousData,
-            [name]: value
+            [name]: value,
         }));
 
         setError("");
@@ -101,12 +102,12 @@ const Register = () => {
         const requestData = {
             name: formData.name.trim(),
             email: formData.email.trim().toLowerCase(),
-            password: formData.password
+            password: formData.password,
         };
 
         try {
-            const response = await axios.post(
-                "http://localhost:8080/api/auth/register",
+            const response = await api.post(
+                "/api/auth/register",
                 requestData
             );
 
@@ -119,29 +120,27 @@ const Register = () => {
             setFormData({
                 name: "",
                 email: "",
-                password: ""
+                password: "",
             });
 
             setTimeout(() => {
                 navigate("/login");
             }, 1500);
-
         } catch (error) {
             console.error("Registration error:", error);
 
             if (error.response) {
                 setError(
                     error.response.data?.message ||
-                    "Registration failed. Please check your details."
+                        "Registration failed. Please check your details."
                 );
             } else if (error.request) {
                 setError(
-                    "Unable to connect to the server. Please make sure the backend is running."
+                    "Unable to connect to the server. Please try again later."
                 );
             } else {
                 setError("Something went wrong. Please try again.");
             }
-
         } finally {
             setLoading(false);
         }
@@ -149,13 +148,11 @@ const Register = () => {
 
     return (
         <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-8">
-
             <div className="w-full max-w-md">
 
+                {/* Header */}
                 <div className="text-center mb-8">
-
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 shadow-md mb-4">
-
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -176,7 +173,6 @@ const Register = () => {
                                 d="M8.25 8.25h7.5M8.25 12h7.5M8.25 15.75h4.5"
                             />
                         </svg>
-
                     </div>
 
                     <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -186,13 +182,12 @@ const Register = () => {
                     <p className="mt-2 text-sm text-slate-500">
                         Inventory Management System
                     </p>
-
                 </div>
 
+                {/* Card */}
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8">
 
                     <div className="mb-6">
-
                         <h2 className="text-2xl font-semibold text-slate-900">
                             Create Account
                         </h2>
@@ -200,12 +195,11 @@ const Register = () => {
                         <p className="mt-1 text-sm text-slate-500">
                             Create your account to manage your inventory.
                         </p>
-
                     </div>
 
+                    {/* Error */}
                     {error && (
                         <div className="mb-5 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -224,13 +218,12 @@ const Register = () => {
                             <p className="text-sm text-red-600">
                                 {error}
                             </p>
-
                         </div>
                     )}
 
+                    {/* Success */}
                     {success && (
                         <div className="mb-5 flex items-start gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3">
-
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -249,18 +242,18 @@ const Register = () => {
                             <p className="text-sm text-green-600">
                                 {success}
                             </p>
-
                         </div>
                     )}
 
+                    {/* Form */}
                     <form
                         onSubmit={handleSubmit}
                         className="space-y-5"
                         noValidate
                     >
 
+                        {/* Name */}
                         <div>
-
                             <label
                                 htmlFor="name"
                                 className="block mb-2 text-sm font-medium text-slate-700"
@@ -277,13 +270,13 @@ const Register = () => {
                                 placeholder="Enter your full name"
                                 autoComplete="name"
                                 maxLength={50}
-                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                disabled={loading}
+                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100 disabled:cursor-not-allowed"
                             />
-
                         </div>
 
+                        {/* Email */}
                         <div>
-
                             <label
                                 htmlFor="email"
                                 className="block mb-2 text-sm font-medium text-slate-700"
@@ -300,13 +293,13 @@ const Register = () => {
                                 placeholder="Enter your email"
                                 autoComplete="email"
                                 maxLength={100}
-                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                disabled={loading}
+                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100 disabled:cursor-not-allowed"
                             />
-
                         </div>
 
+                        {/* Password */}
                         <div>
-
                             <label
                                 htmlFor="password"
                                 className="block mb-2 text-sm font-medium text-slate-700"
@@ -315,32 +308,38 @@ const Register = () => {
                             </label>
 
                             <div className="relative">
-
                                 <input
                                     id="password"
-                                    type={showPassword ? "text" : "password"}
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Create a password"
                                     autoComplete="new-password"
                                     maxLength={50}
-                                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                    disabled={loading}
+                                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 pr-11 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100 disabled:cursor-not-allowed"
                                 />
 
                                 <button
                                     type="button"
                                     onClick={() =>
-                                        setShowPassword((previous) => !previous)
+                                        setShowPassword(
+                                            (previous) => !previous
+                                        )
                                     }
+                                    disabled={loading}
                                     aria-label={
                                         showPassword
                                             ? "Hide password"
                                             : "Show password"
                                     }
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors duration-200 hover:text-slate-600 focus:outline-none"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors duration-200 hover:text-slate-600 focus:outline-none disabled:cursor-not-allowed"
                                 >
-
                                     {showPassword ? (
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -353,7 +352,7 @@ const Register = () => {
                                             <path
                                                 strokeLinecap="round"
                                                 strokeLinejoin="round"
-                                                d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c1.667 0 3.233-.385 4.623-1.07M6.228 6.228A10.45 10.45 0 0 1 12 4.5c4.756 0 8.774 3.162 10.066 7.5a10.523 10.523 0 0 1-4.293 5.273M6.228 6.228 3 3m3.228 3.228 3.055 3.055m0 0a3 3 0 1 0 4.243 4.243m0 0 3.055 3.055"
+                                                d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c1.667 0 3.233-.385 4.623-1.07M6.228 6.228A10.45 10.45 0 0 1 12 4.5c4.756 0 8.774 3.162 10.066 7.5a10.523 10.523 0 0 0-4.293 5.273M6.228 6.228 3 3m3.228 3.228 3.055 3.055m0 0a3 3 0 1 0 4.243 4.243m0 0 3.055 3.055"
                                             />
                                         </svg>
                                     ) : (
@@ -378,26 +377,22 @@ const Register = () => {
                                             />
                                         </svg>
                                     )}
-
                                 </button>
-
                             </div>
 
                             <p className="mt-2 text-xs text-slate-400">
                                 Password must contain at least 6 characters.
                             </p>
-
                         </div>
 
+                        {/* Submit */}
                         <button
                             type="submit"
                             disabled={loading}
                             className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
-
                                     <svg
                                         className="h-4 w-4 animate-spin"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -421,41 +416,31 @@ const Register = () => {
                                     </svg>
 
                                     Creating Account...
-
                                 </span>
                             ) : (
                                 "Create Account"
                             )}
-
                         </button>
-
                     </form>
 
+                    {/* Login link */}
                     <div className="mt-6 border-t border-slate-100 pt-6 text-center">
-
                         <p className="text-sm text-slate-500">
-
                             Already have an account?{" "}
-
                             <Link
                                 to="/login"
                                 className="font-semibold text-blue-600 transition-colors hover:text-blue-700"
                             >
                                 Sign in
                             </Link>
-
                         </p>
-
                     </div>
-
                 </div>
 
                 <p className="mt-6 text-center text-xs text-slate-400">
                     © 2026 InventoryPro. All rights reserved.
                 </p>
-
             </div>
-
         </div>
     );
 };
