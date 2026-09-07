@@ -1,18 +1,15 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "https://inventorymanagementsystem-v5u6.onrender.com",
     headers: {
-        "Content-Type": "application/json"
-    }
+        "Content-Type": "application/json",
+    },
 });
 
-
-
-
+// Add JWT token to every request
 api.interceptors.request.use(
     (config) => {
-
         const token = localStorage.getItem("token");
 
         if (token) {
@@ -21,31 +18,20 @@ api.interceptors.request.use(
 
         return config;
     },
-
     (error) => {
         return Promise.reject(error);
     }
 );
 
-
-
+// Handle unauthorized responses
 api.interceptors.response.use(
-
-   
     (response) => {
         return response;
     },
-
-    
     (error) => {
-
-      
         if (error.response?.status === 401) {
-
             localStorage.removeItem("token");
             localStorage.removeItem("user");
-
-         
             window.location.href = "/login";
         }
 
