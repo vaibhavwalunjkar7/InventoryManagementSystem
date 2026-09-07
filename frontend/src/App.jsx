@@ -26,9 +26,7 @@ function App() {
 
             <Routes>
 
-                {/* =====================================
-                    PUBLIC ROUTES
-                ====================================== */}
+             
 
                 <Route
                     path="/login"
@@ -41,19 +39,15 @@ function App() {
                 />
 
 
-                {/* =====================================
-                    PROTECTED ROUTES
-                ====================================== */}
+            
 
                 <Route element={<ProtectedRoute />}>
 
-                    {/* =================================
-                        COMMON LAYOUT
-                    ================================== */}
+                
 
                     <Route element={<Layout />}>
 
-                        {/* Dashboard */}
+                      
 
                         <Route
                             path="/"
@@ -61,7 +55,7 @@ function App() {
                         />
 
 
-                        {/* Products */}
+                      
 
                         <Route
                             path="/products"
@@ -79,7 +73,6 @@ function App() {
                         />
 
 
-                        {/* Categories */}
 
                         <Route
                             path="/categories"
@@ -96,7 +89,7 @@ function App() {
                 </Route>
 
 
-                {/* Fallback */}
+                
 
                 <Route
                     path="*"
